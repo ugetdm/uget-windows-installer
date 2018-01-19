@@ -16,125 +16,6 @@
 ; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;--------------------------------
-;Include Modern UI
-
-  !include "MUI2.nsh"
-
-;--------------------------------
-;General
-  !define _APPLICATION_NAME "uGet"
-  !define _VERSION "2.2.0"
-  !define _RELEASE "0"
-  !define _COMPANY "uGetdm.com"
-
-  ;Name and file
-  Name "uGet"
-  OutFile "uGet-${_VERSION}-win32+gtk3.exe"
-
-  ;Default installation folder
-  InstallDir $PROGRAMFILES\uGet
-
-  ;Get installation folder from registry if available
-  InstallDirRegKey HKLM "Software\uGet" "Install_Dir"
-
-  ;Request application privileges for Windows Vista
-  RequestExecutionLevel admin
-
-;--------------------------------
-;Interface Settings
-
-  !define MUI_ABORTWARNING
-
-;--------------------------------
-;Pages
-
-  !insertmacro MUI_PAGE_LICENSE "resource\license"
-  !insertmacro MUI_PAGE_DIRECTORY
-  !insertmacro MUI_PAGE_INSTFILES
-
-  !insertmacro MUI_UNPAGE_CONFIRM
-  !insertmacro MUI_UNPAGE_INSTFILES
-
-;--------------------------------
-;Languages
-
-  !insertmacro MUI_LANGUAGE "English"
-
-;--------------------------------
-;Version Information
-  VIProductVersion "${_VERSION}.${_RELEASE}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${_APPLICATION_NAME}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${_VERSION}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "#1 Open Source Download Manager"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${_COMPANY}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright 2018 ${_COMPANY}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${_APPLICATION_NAME} Installer"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${_VERSION}.${_RELEASE}"
-  
-;--------------------------------
-; The stuff to install
-Section "uGet (required)"
-
-	SectionIn RO
-
-	; Set output path to the installation directory.
-	SetOutPath $INSTDIR
-
-	; Put the files
-	File /r "uget-${_VERSION}-win32+gtk3\*.*"
-
-	; Replace \ by \\ in the installation path
-	${StrRep} $0 "$INSTDIR" "\" "\\"
-	
-	
-	; Put the icon
-	File "resource\icon.ico"
-	
-	createDirectory "$SMPROGRAMS\uGet"
-	createShortCut "$SMPROGRAMS\uGet\${_APPLICATION_NAME}.lnk" "$INSTDIR\bin\uget.exe" "" "$INSTDIR\icon.ico"
- 
-
-	; Write the installation path into the registry
-	WriteRegStr HKLM "SOFTWARE\uGet" "Install_Dir" "$INSTDIR"
-	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\uget.exe" "" "$INSTDIR\bin\uget.exe"
-	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\uget.exe" "Path" "$INSTDIR\bin;"
-
-
-	; Write the uninstall keys for Windows
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "DisplayName" "${_APPLICATION_NAME}"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "Publisher" "${_COMPANY}"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "HelpLink" "http://www.ugetdm.com/help"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "URLUpdateInfo" "http://www.ugetdm.com/downloads"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "URLInfoAbout" "http://www.ugetdm.com/about"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "DisplayVersion" "${_VERSION}"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "UninstallString" '"$INSTDIR\uninstall.exe"'
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "DisplayIcon" "$INSTDIR\icon.ico,0"
-	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "NoModify" 1
-	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet" "NoRepair" 1
-	WriteUninstaller "uninstall.exe"
-
-SectionEnd
-
-;--------------------------------
-
-; Uninstaller
-
-Section "Uninstall"
-
-	; Remove registry keys
-	DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\uget.exe"
-	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\uGet"
-	DeleteRegKey HKLM "SOFTWARE\uGet"
-
-	; Remove files and uninstaller
- 	!insertmacro RemoveFilesAndSubDirs "$INSTDIR\"
-
-	; Remove directories used
-	RMDir "$INSTDIR"
-
-SectionEnd
-
-;--------------------------------
 ; Required Macros
 
 !define StrRep "!insertmacro StrRep"
@@ -262,3 +143,146 @@ ${Index_RemoveFilesAndSubDirs}-done:
   Pop $R0
   !undef Index_RemoveFilesAndSubDirs
 !macroend
+
+;--------------------------------
+;Include Modern UI
+
+  !include "MUI2.nsh"
+
+;--------------------------------
+;General
+  !define _APPLICATION_NAME "uGet"
+  !define _VERSION "2.2.0"
+  !define _RELEASE "0"
+  !define _COMPANY "uGetdm.com"
+
+  ;Name and file
+  Name "${_APPLICATION_NAME}"
+  OutFile "${_APPLICATION_NAME}-${_VERSION}-win32+gtk3.exe"
+
+  ;Default installation folder
+  InstallDir $PROGRAMFILES\${_APPLICATION_NAME}
+
+  ;Get installation folder from registry if available
+  InstallDirRegKey HKLM "Software\${_APPLICATION_NAME}" "Install_Dir"
+
+  ;Request application privileges for Windows Vista
+  RequestExecutionLevel admin
+
+;--------------------------------
+;Interface Settings
+
+  !define MUI_ABORTWARNING
+
+;--------------------------------
+;Pages
+
+  !insertmacro MUI_PAGE_LICENSE "resource\license"
+  !insertmacro MUI_PAGE_DIRECTORY
+  !insertmacro MUI_PAGE_INSTFILES
+
+  !insertmacro MUI_UNPAGE_CONFIRM
+  !insertmacro MUI_UNPAGE_INSTFILES
+
+;--------------------------------
+;Languages
+
+  !insertmacro MUI_LANGUAGE "English"
+
+;--------------------------------
+;Version Information
+  VIProductVersion "${_VERSION}.${_RELEASE}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${_APPLICATION_NAME}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${_VERSION}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "#1 Open Source Download Manager"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${_COMPANY}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright 2018 ${_COMPANY}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${_APPLICATION_NAME} Installer"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${_VERSION}.${_RELEASE}"
+  
+;--------------------------------
+; The stuff to install
+Section "uGet (required)"
+
+	SectionIn RO
+
+	; Set output path to the installation directory.
+	SetOutPath $INSTDIR
+
+	; Put the files
+	File /r "uget-${_VERSION}-win32+gtk3\*.*"
+
+	; Replace \ by \\ in the installation path
+	${StrRep} $0 "$INSTDIR" "\" "\\"
+	
+	
+	; Put the icon
+	File "resource\icon.ico"
+	
+	createDirectory "$SMPROGRAMS\${_APPLICATION_NAME}"
+	createShortCut "$SMPROGRAMS\${_APPLICATION_NAME}\${_APPLICATION_NAME}.lnk" "$INSTDIR\bin\uget.exe" "" "$INSTDIR\icon.ico"
+ 
+
+	; Write the installation path into the registry
+	WriteRegStr HKLM "SOFTWARE\${_APPLICATION_NAME}" "Install_Dir" "$INSTDIR"
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\uget.exe" "" "$INSTDIR\bin\uget.exe"
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\uget.exe" "Path" "$INSTDIR\bin;"
+
+
+	; Write the uninstall keys for Windows
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "DisplayName" "${_APPLICATION_NAME}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "Publisher" "${_COMPANY}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "HelpLink" "http://www.ugetdm.com/help"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "URLUpdateInfo" "http://www.ugetdm.com/downloads"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "URLInfoAbout" "http://www.ugetdm.com/about"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "DisplayVersion" "${_VERSION}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "DisplayIcon" "$INSTDIR\icon.ico,0"
+	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "NoModify" 1
+	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" "NoRepair" 1
+	WriteUninstaller "uninstall.exe"
+
+SectionEnd
+
+;--------------------------------
+
+; Uninstaller
+
+Section "Uninstall"
+
+	; Remove registry keys
+	DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\uget.exe"
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}"
+	DeleteRegKey HKLM "SOFTWARE\${_APPLICATION_NAME}"
+
+	; Remove files and uninstaller
+ 	!insertmacro RemoveFilesAndSubDirs "$INSTDIR\"
+
+	; Remove directories used
+	RMDir "$INSTDIR"
+
+SectionEnd
+
+
+;--------------------------------
+; uninstall the previous version
+Function .onInit
+ 
+  ReadRegStr $R0 HKLM \
+  "Software\Microsoft\Windows\CurrentVersion\Uninstall\${_APPLICATION_NAME}" \
+  "UninstallString"
+  StrCmp $R0 "" done
+ 
+  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+  "${_APPLICATION_NAME} is already installed. $\n$\nClick `OK` to remove the \
+  previous version or `Cancel` to cancel this upgrade." \
+  IDOK uninst
+  Abort
+ 
+;Run the uninstaller
+uninst:
+  ClearErrors
+  Exec $R0
+done:
+ 
+FunctionEnd
