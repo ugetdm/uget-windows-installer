@@ -155,6 +155,7 @@ ${Index_RemoveFilesAndSubDirs}-done:
   !define _VERSION "2.2.0"
   !define _RELEASE "0"
   !define _COMPANY "uGetdm.com"
+  !define _DESCRIPTION "#1 Open Source Download Manager"
 
   ;Name and file
   Name "${_APPLICATION_NAME}"
@@ -194,7 +195,7 @@ ${Index_RemoveFilesAndSubDirs}-done:
   VIProductVersion "${_VERSION}.${_RELEASE}"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${_APPLICATION_NAME}"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${_VERSION}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "#1 Open Source Download Manager"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "${_DESCRIPTION}"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${_COMPANY}"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright 2018 ${_COMPANY}"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${_APPLICATION_NAME} Installer"
@@ -219,9 +220,8 @@ Section "uGet (required)"
 	; Put the icon
 	File "resource\icon.ico"
 	
-	createDirectory "$SMPROGRAMS\${_APPLICATION_NAME}"
-	createShortCut "$SMPROGRAMS\${_APPLICATION_NAME}\${_APPLICATION_NAME}.lnk" "$INSTDIR\bin\uget.exe" "" "$INSTDIR\icon.ico"
- 
+  ; Create Start Menu launcher
+	createShortCut "$SMPROGRAMS\${_APPLICATION_NAME}.lnk" "$INSTDIR\bin\uget.exe" "" "$INSTDIR\icon.ico"
 
 	; Write the installation path into the registry
 	WriteRegStr HKLM "SOFTWARE\${_APPLICATION_NAME}" "Install_Dir" "$INSTDIR"
@@ -249,6 +249,9 @@ SectionEnd
 ; Uninstaller
 
 Section "Uninstall"
+
+  # Remove Start Menu launcher
+	Delete "$SMPROGRAMS\${_APPLICATION_NAME}.lnk"
 
 	; Remove registry keys
 	DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\uget.exe"
