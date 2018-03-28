@@ -152,7 +152,7 @@ ${Index_RemoveFilesAndSubDirs}-done:
 ;--------------------------------
 ;General
   !define _APPLICATION_NAME "uGet"
-  !define _VERSION "2.2.0"
+  !define _VERSION "2.2.1"
   !define _RELEASE "0"
   !define _COMPANY "uGetdm.com"
   !define _DESCRIPTION "#1 Open Source Download Manager"
